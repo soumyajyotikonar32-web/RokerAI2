@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roker AI - Ashvanth • Mahashwin • Kamaleswar • Soumyajyoti</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      height: 100%;
+      background: #000 url('https://images.unsplash.com/photo-1464802686295-1b34f18a9a79?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') center/cover fixed;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      overflow-y: auto;
+    }
+
+    /* Zoom-In Intro */
+    #intro {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,20,0.98); z-index: 99999;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      animation: zoomOut 5s forwards;
+    }
+    #intro h1 {
+      font-size: 8vw; font-weight: 900; letter-spacing: 12px;
+      background: linear-gradient(90deg, #00ffff, #ff3399, #00ffaa);
+      background-clip: text; color: transparent;
+      text-shadow: 0 0 40px #00ffff;
+    }
+    #intro p {
+      font-size: 2.5vw; margin-top: 30px; color: #00ffff;
+      opacity: 0; animation: fadeIn 2s 2s forwards;
+    }
+    @keyframes zoomOut {
+      0%   { transform: scale(3); opacity: 0; }
+      50%  { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; pointer-events: none; }
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* Main App */
+    #app {
+      min-height: 100vh; padding: 6vh 5vw;
+      background: rgba(0,0,30,0.75); backdrop-filter: blur(12px);
+      text-align: center; opacity: 0;
+      animation: fadeInApp 2s 4.5s forwards;
+    }
+    @keyframes fadeInApp { to { opacity: 1; } }
+
+    header { padding: 50px 0; }
+    h1 {
+      font-size: 6.5em;
+      background: linear-gradient(90deg, #00ffff, #ff3399);
+      background-clip: text; color: transparent;
+    }
+    .tagline {
+      font-size: 2.2em; color: #00ffff; margin: 25px 0;
+      text-shadow: 0 0 20px #00ffff;
+    }
+
+    .input-area {
+      background: rgba(0,20,80,0.85); padding: 45px; border-radius: 35px;
+      border: 4px solid #00ffff; box-shadow: 0 0 80px rgba(0,255,255,0.5);
+      max-width: 1100px; margin: 50px auto; position: relative;
+    }
+
+    textarea {
+      width: 100%; height: 220px; background: #001133; color: #00ffff;
+      border: 3px solid #00ffff; border-radius: 22px; padding: 35px;
+      font-size: 2.4em; resize: none; outline: none;
+      box-shadow: inset 0 0 50px #002244;
+      transition: all 0.4s;
+    }
+    textarea::placeholder { color: #0088cc; }
+
+    /* Google-style RGB glow when typing */
+    textarea:focus {
+      border-color: transparent;
+      animation: rgbGlow 3s infinite;
+      box-shadow:
+        0 0 20px rgba(0,255,255,0.9),
+        0 0 40px rgba(255,0,153,0.7),
+        0 0 60px rgba(0,255,170,0.6),
+        inset 0 0 50px #002244;
+    }
+    @keyframes rgbGlow {
+      0%   { box-shadow: 0 0 20px #0ff, 0 0 40px #f0f, 0 0 60px #0f0, inset 0 0 50px #002244; }
+      33%  { box-shadow: 0 0 20px #f0f, 0 0 40px #0f0, 0 0 60px #0ff, inset 0 0 50px #002244; }
+      66%  { box-shadow: 0 0 20px #0f0, 0 0 40px #0ff, 0 0 60px #f0f, inset 0 0 50px #002244; }
+      100% { box-shadow: 0 0 20px #0ff, 0 0 40px #f0f, 0 0 60px #0f0, inset 0 0 50px #002244; }
+    }
+
+    .btn-group {
+      margin: 50px 0; gap: 35px; display: flex; justify-content: center; flex-wrap: wrap;
+    }
+    button {
+      padding: 22px 80px; font-size: 2em; font-weight: bold; border: none;
+      border-radius: 70px; cursor: pointer; transition: all .4s;
+      box-shadow: 0 0 60px rgba(0,255,255,0.7);
+    }
+    #analyzeBtn { background: #00ffff; color: #000; }
+    #analyzeBtn:hover { background: #00ccff; transform: scale(1.18); }
+    #speakBtn { background: #ff3399; color: #fff; }
+    #speakBtn:hover { background: #ff0066; transform: scale(1.18); }
+
+    #result {
+      background: rgba(0,20,80,0.9); padding: 60px; border-radius: 35px;
+      border: 4px dashed #00ffff; min-height: 220px; font-size: 2.8em; line-height: 1.7;
+      box-shadow: 0 0 100px rgba(0,255,255,0.6); max-width: 1100px; margin: 60px auto;
+    }
+    .emoji-big {
+      font-size: 8em; margin: 30px 0; text-shadow: 0 0 40px #00ffff;
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0%,100% { text-shadow: 0 0 40px #00ffff; }
+      50%     { text-shadow: 0 0 80px #ff3399; }
+    }
+
+    .credits {
+      padding: 40px; color: #00ffff; font-size: 1.4em;
+      background: rgba(0,0,0,0.6); margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>ROKER AI</h1>
+    <p>Launching Mood Detection from Deep Space...</p>
+  </div>
+
+  <div id="app">
+    <header>
+      <h1>ROKER AI</h1>
+      <p class="tagline">This is AI learns thorugh deepthinking on human basis.</p>
+    </header>
+
+    <div class="input-area">
+      <textarea id="input" placeholder="Spam your emojis in this... 🚀😊❤️🩸🎨🍎"></textarea>
+      <div class="btn-group">
+        <button id="analyzeBtn" onclick="detectMood()">Analyze Mood</button>
+        <button id="speakBtn" onclick="speakResult()">Read Aloud</button>
+      </div>
+    </div>
+
+    <div id="result">Your interstellar mood reading will appear here...</div>
+
+    <div class="credits">
+      Created by Soumyajyoti • Ashvanth • Mahashwin • Kamaleswar
+    </div> 
+  </div>
+
+  <script>
+    const moodMap = {
+      happy: "😀😃😄😁😆😅😂🤣🥹😇🙂🙃😉😊😋😍🥰😘😗😙😚🤩🥳🤗🥹🫠😎🤓🧐😛😜😝😇🥲🤭🫢🫣🤤🎈",
+      love: "❤️🧡💛💚💙💜🤎🖤🤍💔❤️‍🔥❤️‍🩹❣️💕💞💓💗💖💘💝💟😘🥰😍🤩😻💌💐🌹🌺🌸🌷🪷",
+      excited: "🤩🥳🎉🎊🎈✨🎇🎆🔥🚀⭐🌟💫⚡😎🤪🤑",
+      sad: "😞😟😢😭😦😧😨😩😰😥😓😔😕🙁☹️😿💔😞🥀🌧️☔😖😣😫😩🥺😢💧🙎‍♀️🙎‍♂️🙍🙍‍♂️🙍‍♀️🙎",
+      angry: "😡🤬😤😠🤯👿😒💢👊🤦‍♂️🤦‍♀️🤦👺",
+      anxious: "😱😨😰😥😓😬🙀😖😣😫🥶🤢🤮",
+      calm: "😌😎😐😑🤨🧐🤔🤫🤐🫥😶",
+      tired: "😴💤🥱😪🤧🤒",
+      playful: "😏🤪😜🤨😝😛🤑🤡🥴🤠🤑🤓🧐",
+      food: "🍕🍔🍟🌭🍿🍩🍫🍰🧁🍦🍪🍭🍬🍯🥤☕🍵🍺🍻🥂🥃",
+      travel: "✈️🚀🚗🚙🚌🚆🚂🚤⛵🛳️🚢🛩️🛫🛬🌍🌎🌏",
+      nature: "🌳🌲🌴🌵🌿☘️🍀🌺🌸🌼🌻🌞🌙⭐🌟✨",
+      celebration: "🎉🎊🎈🎁🎂🎀🎄🎃🥳",
+      animals: "🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🐢🐍🦎🦖🦕🐙🦑🦐🦞🦀🐡🐠🐟🐬🐳🐋🦈🐐🐕🐈🐂🐄🐁",
+      killer: "🔪🗡️🩸🧛‍♀️🧛‍♂️🧛",
+      ghost: "👻🧟🧟‍♂️🧟‍♀️💀☠️🩻",
+      sick: "🤒🤢🤮🤧😵",
+      depression: "🫥🙎🙎‍♂️🙎‍♀️",
+      action: "🎬🥷✊👊🤛🤜💪",
+      singing: "🎤🧑‍🎤👨‍🎤👩‍🎤🎶",
+      studying: "🧑‍🎓👨‍🎓👩‍🎓🏫🎙️📚",
+      water: "💦🤽🤽‍♂️🤽‍♀️🐃🫗🥤🌊💧🔫🚿🚰",
+      gym: "⛹️⛹️‍♂️⛹️‍♀️🤸🤸‍♂️🤸‍♀️",
+      doctor: "😷🧑‍⚕️👨‍⚕️👩‍⚕️🏥🥼💉💊🩺🩻",
+      artist: "🖼️🎨🧑‍🎨👨‍🎨👩‍🎨🎭",
+      fruit: "🍇🍈🍉🍊🍋🍋‍🟩🍌🍍🍎🍎🥭🍐",
+      vegetable: "🍅🍆🥔🥕🫑🥒🥜🫛🍄‍🟫🍠",
+      game: "👾🏐🎳🏏🏑🏒🏓🥌🏸🎯🎱",
+      videogame: "🎮🕹️",
+      flag: "⛳📫📪📬📭🏁🚩🏴🏳️🏳️‍🌈🏳️‍⚧️🏴‍☠️",
+      gadgets: "🤳📱📲☎️📞📺💻🧑‍💻👨‍💻👩‍💻🖥️🖨️⌨️🖱️🖲️💽💾💿",
+      movie: "🍿🎥🎞️📽️🎬🎦",
+      dance: "💃🕺🪩🪭🩰🪇👯👯‍♂️👯‍♀️",
+      building: "🏠🏡🏢🏣🏤🏦🏨🏩🏪",
+      hospital: "🏥",
+      construction: "🏗️🚧",
+      alien: "👽🛸📡",
+      earth: "🌍🌎🌏",
+      planet: "🪐",
+      mermaids: "🧜‍♂️🧜‍♀️",
+      electricity: "🧑‍🔧👨‍🔧👩‍🔧🚃⚡🪫🔌💡",
+      scientist: "🧑‍🔬👨‍🔬👩‍🔬",
+      maths_symbol: "✖️➕➖➗📏📐",
+      organs: "🫀🫁",
+      stocks: "💹",
+      coin: "🪙",
+      fashionable_dress: "👗🥻👚👜👝👠👢👕👖",
+      bomb:"💣💥",
+      pen:"🖊️✒️🖋️✏️",
+      verified:"✅☑️✔️🎟️🎫",
+      robot:"🤖",
+      explict_content:"🖕👙🫦💏",
+      good_things:"🧘🧘‍♂️🧘‍♀️🛐📿🙏",
+      money:"🤑💰💴💵💶💷💸💳",
+      fart:"💨",
+      beach:"🏄🏄‍♂️🏄‍♀️🏖️⛱️",
+      camera:"📸📹📼🎥📽️📷",
+      animal_feeder:"🍖🍗🥩🥓🥧🧆🍝",
+      
+      
+
+      
+
+    };
+
+    const responses = {
+      happy: "Excellent! You are radiating pure joy and positive energy. Keep shining!",
+      love: "So much love and warmth detected. Your heart is in a beautiful place.",
+      excited: "High energy detected! You're ready to conquer the world!",
+      sad: "It's okay to feel down sometimes. Be gentle with yourself — this too shall pass. Never give up.",
+      angry: "Strong emotions detected. Take a few deep breaths and allow yourself to calm down.",
+      anxious: "Feeling a bit overwhelmed? Try focusing on your breathing. You're stronger than you think.",
+      calm: "Perfect inner peace and balance. A true state of mindfulness.",
+      tired: "You seem exhausted. Consider taking a break and resting well.",
+      playful: "Fun and mischievous mood detected! Keep that youthful spirit alive!",
+      food: "Food mood activated! Time for a delicious meal!",
+      travel: "Wanderlust detected! Adventure is calling your name!",
+      nature: "Deep connection with nature. Very refreshing and grounding energy.",
+      celebration: "It's party time! What's the happy occasion?",
+      animals: "Animal lover detected! Such pure and innocent joy!",
+      killer: "Warning: Killer mode activated! You're in dangerous territory!",
+      ghost: "Boo! Ghost mode activated. Are you trying to scare me?",
+      sick: "Oh no! You seem sick. Take medicine and rest well!",
+      depression: "Hey, I see you're feeling low. You're not alone — take some rest and talk to someone. You matter.",
+      action: "Action hero mode ON! Ready to fight and win!",
+      singing: "Sing it loud! You're in full music mode!",
+      studying: "Study mode activated! Focus and success is yours! Never give up!",
+      water: "Hydration reminder! Drink water and stay healthy! Keep going!",
+      gym: "Try going gym and keep hanging out",
+      doctor: "Oh so you are a doctor although I like doctor",
+      artist: "Ohh so you are an artist I too like art's!",
+      fruit: "Eating fruit is good for health.....",
+      vegetable: "Eating vegetable is also good for health bruh!!",
+      game: "Playing these games makes you fit!",
+      videogame: "This games are good but too much is not good for health",
+      flag: "This all contains flag",
+      gadgets: "I like gadgets all though",
+      movie: "Ohh movies I also like movies", 
+      dance: "Ohh this is dance",
+      building: "Ohh this is building",
+      hospital: "Ohh this is hospital",
+      construction: "Ohh this is construction",
+      alien: "Ohh so you are an alien it is present in the mars",
+      earth: "Bruh this is earth one of my fav planet",
+      planet: "This is my fav planet mars",
+      mermaids: "These are the mermaids",
+      electricity: "This all are related to electricity",
+      scientist: "Ohh this is scientist",
+      maths_symbol: "This is maths symbols I like this",
+      organs: "This are organs",
+      stocks: "These are the stocks💹",
+      coin: "Ohh this are the coins",
+      fashionable_dress: "Ohh this are the dresses👗",
+      bomb:"This is a bomb!💥",
+      pen:"Ohh this is a pen",
+      verified:"Ohh this is a verified badge✅",
+      robot:"Ohh this is a robot I like it!",
+      explict_content:"Explict content is not allowed by me in this AI.....",
+      good_things:"Doing spiritual things is good!",
+      money:"Ohh this is money!",
+      fart:"Ohh this is fart🤮",
+      beach:"This the beach I like to go there!😎",
+      camera:"Ohh its camera! I think you like photos",
+      animal_feeder:"Ohh So you are animal consumer It has more protien!!"
+
+
+
+    };
+
+    let currentMessage = "";
+
+    function getMood(text) {
+      const emojis = text.match(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu) || [];
+      if (emojis.length === 0) return { mood: "no_emoji", emojis: [], count: 0 };
+
+      let scores = {};
+      emojis.forEach(e => {
+        for (const [mood, group] of Object.entries(moodMap)) {
+          if (group.includes(e)) scores[mood] = (scores[mood] || 0) + 1;
+        }
+      });
+
+      let top = "calm", max = 0;
+      for (const [m, c] of Object.entries(scores)) {
+        if (c > max) { max = c; top = m; }
+      }
+      return { mood: top, count: max, emojis: [...new Set(emojis)] };
+    }
+
+    function detectMood() {
+      const result = getMood(document.getElementById('input').value);
+      const big = result.emojis.slice(0, 15).join("") || "🌌";
+      const msg = responses[result.mood] || "Your mood is out of this world!";
+
+      currentMessage = msg.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '').trim();
+
+      document.getElementById('result').innerHTML = `
+        <div class="emoji-big">${big}</div><br>
+        ${msg}<br><br>
+        <small style="color:#00ffff"><b>${result.mood.toUpperCase()}</b> • ${result.count} emoji(s)</small>
+      `;
+    }
+
+    function speakResult() {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(currentMessage || "No mood detected yet.");
+        utter.rate = 0.9;
+        utter.lang = 'en-US';
+        speechSynthesis.speak(utter);
+      }
+    }
+
+    document.getElementById('input').addEventListener('input', () => {
+      if (document.getElementById('input').value.trim()) detectMood();
+    });
+  </script>
+</body>
+</html>
